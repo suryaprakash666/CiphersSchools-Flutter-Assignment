@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "351590194319",
+    "project_id": "cipher-school-assignment",
+    "storage_bucket": "cipher-school-assignment.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351590194319:android:bcd9c3855039418f3124fa",
+        "android_client_info": {
+          "package_name": "com.example.expense_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHunEIRPRovk3DGahF-UMnmH9SziOXU5E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
