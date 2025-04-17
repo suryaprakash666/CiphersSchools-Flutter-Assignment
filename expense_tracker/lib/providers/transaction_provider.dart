@@ -1,43 +1,47 @@
 import 'package:flutter/foundation.dart';
-import '../models/transaction.dart';
+import '../models/transaction.dart' as app;
 import '../services/database_helper.dart';
 
 class TransactionProvider with ChangeNotifier {
-  List<Transaction> _transactions = [];
-  List<Transaction> _incomeTransactions = [];
-  List<Transaction> _expenseTransactions = [];
+  List<app.Transaction> _transactions = [];
+  List<app.Transaction> _incomeTransactions = [];
+  List<app.Transaction> _expenseTransactions = [];
   double _totalIncome = 0.0;
   double _totalExpenses = 0.0;
 
-  List<Transaction> get transactions => _transactions;
-  List<Transaction> get incomeTransactions => _incomeTransactions;
-  List<Transaction> get expenseTransactions => _expenseTransactions;
+  List<app.Transaction> get transactions => _transactions;
+  List<app.Transaction> get incomeTransactions => _incomeTransactions;
+  List<app.Transaction> get expenseTransactions => _expenseTransactions;
   double get totalIncome => _totalIncome;
   double get totalExpenses => _totalExpenses;
   double get balance => _totalIncome - _totalExpenses;
 
   // Load all transactions from the database
   Future<void> loadTransactions() async {
-    _transactions = await DatabaseHelper.instance.getTransactions();
-    _incomeTransactions = await DatabaseHelper.instance.getTransactionsByType(
-      'income',
-    );
-    _expenseTransactions = await DatabaseHelper.instance.getTransactionsByType(
-      'expense',
-    );
+    _transactions =
+        (await DatabaseHelper.instance.getTransactions())
+            .cast<app.Transaction>();
+    _incomeTransactions =
+        (await DatabaseHelper.instance.getTransactionsByType(
+          'income',
+        )).cast<app.Transaction>();
+    _expenseTransactions =
+        (await DatabaseHelper.instance.getTransactionsByType(
+          'expense',
+        )).cast<app.Transaction>();
     _totalIncome = await DatabaseHelper.instance.getTotalIncome();
     _totalExpenses = await DatabaseHelper.instance.getTotalExpenses();
     notifyListeners();
   }
 
   // Add a new transaction
-  Future<void> addTransaction(Transaction transaction) async {
+  Future<void> addTransaction(app.Transaction transaction) async {
     await DatabaseHelper.instance.createTransaction(transaction);
     await loadTransactions();
   }
 
   // Update an existing transaction
-  Future<void> updateTransaction(Transaction transaction) async {
+  Future<void> updateTransaction(app.Transaction transaction) async {
     await DatabaseHelper.instance.updateTransaction(transaction);
     await loadTransactions();
   }
@@ -49,7 +53,7 @@ class TransactionProvider with ChangeNotifier {
   }
 
   // Get transactions by category
-  List<Transaction> getTransactionsByCategory(String category) {
+  List<app.Transaction> getTransactionsByCategory(String category) {
     return _transactions.where((tx) => tx.category == category).toList();
   }
 }

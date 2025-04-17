@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import '../models/transaction.dart';
+import '../models/transaction.dart' as app;
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -36,20 +36,22 @@ class DatabaseHelper {
   }
 
   // Create a new transaction
-  Future<int> createTransaction(Transaction transaction) async {
+  Future<int> createTransaction(app.Transaction transaction) async {
     final db = await instance.database;
     return await db.insert('transactions', transaction.toMap());
   }
 
   // Read all transactions
-  Future<List<Transaction>> getTransactions() async {
+  Future<List<app.Transaction>> getTransactions() async {
     final db = await instance.database;
     final result = await db.query('transactions', orderBy: 'date DESC');
-    return result.map((json) => Transaction.fromMap(json)).toList();
+    return Future.value(
+      result.map((json) => app.Transaction.fromMap(json)).toList(),
+    );
   }
 
   // Read transactions by type (income or expense)
-  Future<List<Transaction>> getTransactionsByType(String type) async {
+  Future<List<app.Transaction>> getTransactionsByType(String type) async {
     final db = await instance.database;
     final result = await db.query(
       'transactions',
@@ -57,11 +59,13 @@ class DatabaseHelper {
       whereArgs: [type],
       orderBy: 'date DESC',
     );
-    return result.map((json) => Transaction.fromMap(json)).toList();
+    return result
+        .map((json) => app.Transaction.fromMap(json))
+        .toList();
   }
 
   // Update a transaction
-  Future<int> updateTransaction(Transaction transaction) async {
+  Future<int> updateTransaction(app.Transaction transaction) async {
     final db = await instance.database;
     return await db.update(
       'transactions',
